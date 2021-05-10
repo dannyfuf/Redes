@@ -1,5 +1,4 @@
 import socket
-import pickle
 
 def read_option():
 	valid_options = ["piedra", "papel", "tijera"]
@@ -17,7 +16,6 @@ def cliente(cliente_socket, action):
 	while flag:
 		cliente_socket.send(action.encode(encoding="utf-8", errors="ignore"))
 		response = cliente_socket.recv(1024)
-		print(response)
 		if response.decode("utf-8") == "TRUE":
 			print("El servidor está disponible\n")
 			print("Comenzando el juego\n")
@@ -26,20 +24,24 @@ def cliente(cliente_socket, action):
 				print(f"\nUsted jugó {option}")
 				cliente_socket.send(option.encode(encoding="utf-8", errors="ignore"))
 				response = cliente_socket.recv(1024)
-				d_response = pickle.loads(response)
-				print(f'El bot jugó: {d_response["bot"]}\n')
-				if d_response["round_winner"] == "empate":
+				d_response = response.decode("utf-8")
+				d_response = d_response.split(",")
+				score_board = dict(elem.split(":") for elem in d_response[2].split(";"))
+				score_board["cliente"] = int(score_board["cliente"])
+				score_board["bot"] = int(score_board["bot"])
+				print(f'El bot jugó: {d_response[0]}\n')
+				if d_response[1] == "empate":
 					print("Esta ronda fue empate")
 				else:
-					print(f'El ganador de esta ronda fue {d_response["round_winner"]}')
+					print(f'El ganador de esta ronda fue {d_response[1]}')
 
-				print(f'El marcador actual es jugador: {d_response["score_board"]["cliente"]}, bot: {d_response["score_board"]["bot"]}\n')
+				print(f'El marcador actual es jugador: {score_board["cliente"]}, bot: {score_board["bot"]}\n')
 
-				if d_response["score_board"]["cliente"] == 3:
+				if score_board["cliente"] == 3:
 					print('El ganador de esta partida fue usted')
 					flag = False
 					break
-				elif d_response["score_board"]["bot"] == 3:
+				elif score_board["bot"] == 3:
 					print('El ganador de esta partida fue el bot')
 					flag = False
 					break
