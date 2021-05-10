@@ -30,7 +30,7 @@ func main() {
 		n, addr, err := connection.ReadFromUDP(buffer)
 		if string(buffer[0:n]) == "REQCON" {
 			randInt := rand.Intn(100)
-			if randInt%2 == 0 || randInt%2 != 0 {
+			if randInt%2 == 0 {
 				
 				// New socket for game
 				n_port := rand.Intn(10000)
@@ -75,6 +75,7 @@ func main() {
 
 				}
 			} else {
+				fmt.Println("Servidor no disponible\n")
 				_, err = connection.WriteToUDP([]byte("FALSE"), addr)
 				if err != nil {
 					fmt.Println(err)

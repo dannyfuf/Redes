@@ -57,9 +57,10 @@ def game(active_client, game_port):
         elif win == 2:
             score_board["bot"] += 1
 
-        msg = pickle.dumps({"bot": response.decode("utf-8"), "round_winner": winner[win], "score_board": score_board})
-        print(pickle.loads(msg))
-        active_client.send(msg)
+        msg = f"{response.decode('utf-8')},{winner[win]},cliente:{score_board['cliente']};bot:{score_board['bot']}"
+        
+        print(msg)
+        active_client.send(msg.encode(encoding="utf-8", errors="ignore"))
         if 3 in score_board.values():
             bot_socket.send("ENDPLAY".encode(encoding="utf-8", errors="ignore"))
             break
@@ -85,6 +86,9 @@ def client_socket():
                 print(bot_status[1])
                 active_client.send(bot_status[0].encode(encoding="utf-8", errors="ignore"))
                 game(active_client, bot_status[1])
+            else:
+                print("Servidor no disponible\n")
+                active_client.send(bot_status[0].encode(encoding="utf-8", errors="ignore"))
 
         elif client_option.decode("utf-8") == "CLOSE":
             active_client.send(client_option)
