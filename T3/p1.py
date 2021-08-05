@@ -27,18 +27,24 @@ class Net( Topo ):
 		s3 = self.addSwitch( 's3' )
 		s4 = self.addSwitch( 's4' )
 
-		self.addLink( s1, s2 , 12, 21)
-		self.addLink( s2, s3 , 23, 32)
-		self.addLink( s3, s4 , 34, 43)
-		self.addLink( s4, s1 , 41, 14)
-		self.addLink( s1, h1 , 1, 11)
-		self.addLink( s1, h2 , 2, 12)
-		self.addLink( s2, h3 , 3, 13)
-		self.addLink( s2, h4 , 4, 14)
-		self.addLink( s3, h5 , 5, 15)
-		self.addLink( s3, h6 , 6, 16)
-		self.addLink( s4, h7 , 7, 17)
-		self.addLink( s4, h8 , 8, 18)
+		# Link entre switches
+		self.addLink( s1, s4 , 21, 34)
+		self.addLink( s4, s3 , 24, 33)
+		self.addLink( s3, s2 , 23, 32)
+		self.addLink( s2, s1 , 22, 31)
+
+		# Link entre hosts
+		self.addLink( h1, s1 , 1, 11)
+		self.addLink( h2, s1 , 2, 12)
+
+		self.addLink( h3, s2 , 3, 13)
+		self.addLink( h4, s2 , 4, 14)
+
+		self.addLink( h5, s3 , 5, 15)
+		self.addLink( h6, s3 , 6, 16)
+		
+		self.addLink( h7, s4 , 7, 17)
+		self.addLink( h8, s4 , 8, 18)
 			
 topos = { 'topo1': (lambda: Net() )}
 			
